@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Processeur d'images GIPHY</title>
+    <!-- Meta tags requis -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        .lds-ellipsis {
+          display: inline-block;
+          position: relative;
+          width: 64px;
+          height: 64px;
+        }
+        .lds-ellipsis div {
+          position: absolute;
+          top: 27px;
+          width: 11px;
+          height: 11px;
+          border-radius: 50%;
+          background: red;
+          animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        .lds-ellipsis div:nth-child(1) {
+          left: 6px;
+          animation: lds-ellipsis1 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(2) {
+          left: 6px;
+          animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(3) {
+          left: 26px;
+          animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(4) {
+          left: 45px;
+          animation: lds-ellipsis3 0.6s infinite;
+        }
+        @keyframes lds-ellipsis1 {
+          0% {
+            transform: scale(0);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+        @keyframes lds-ellipsis3 {
+          0% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(0);
+          }
+        }
+        @keyframes lds-ellipsis2 {
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(19px, 0);
+          }
+        }
+    </style>
+        
+    <script type="text/javascript">
+        function plot()
+        {  
+            document.getElementById("differences").value = getDifferences();
+            document.getElementById("frames").value = getFrames();
+            document.getElementById("graph").innerHTML = "";
+            // alert(document.getElementById("differences").value);
+            // alert(document.getElementById("frames").value);
+            var start = 1;
+            var finish = document.getElementById("frames").value;
+
+            var arr = [];
+
+            for (var i=0; i<finish-1; i++){
+                // alert(i);
+                arr[i] = i
+            }
+
+            // while(start < finish+1){
+            //   arr.push(start++);
+            // }
+            // alert(arr);
+            var diffArr = document.getElementById("differences").value.split(",");
+            // alert(typeof arr);
+            // alert(typeof diffArr);
+            // diffArr = document.getElementById("differences").value;
+            // alert(diffArr);
+            var trace1 = {
+                x: arr,
+                y: diffArr,
+                mode: 'lines',
+                name: 'Intensité de l'impulsion',
+                line: {
+                    color: 'blue',
+                    width: 2
+                }
+            };
+
+            // var constantArr = [];
+            // var mySum = 0;
+
+            // for (var i=0; i<arr.length; i++){
+            //     mySum = mySum + arr[i];
+            // }
+            // alert(mySum);
+
+            // var trace2 = {
+            //     x: arr,
+            //     y:
+            // }
+            
+            var layout = {
+                // autosize: true,
+                width: 1000,
+                height: 800,
+                // margin: {
+                //     l: 50,
+                //     r: 50,
+                //     b: 100,
+                //     t: 100,
+                //     pad: 4
+                // },
+                title: "Graphique d'intensité GIF", 
+                xaxis: {title: "Numéro de l'impulsion"}, 
+                yaxis: {title: "Intensité de l'impulsion"},		  
+            };
+            
+            var data = [trace1];
+        
+            Plotly.newPlot('graph', data, layout);
+        }
+    </script>
+
+       <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+     <!--Inclure la bibliothèque JavaScript pour plotly-->
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <!-- JavaScript facultatif -->
+    <!-- jQuery d'abord, puis Popper.js, puis Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+   </head>
+  <body>
+    
+    <!-- jumbotron -->
+    <div class="jumbotron jumbotron-fluid bg-dark text-white">
+      <div class="container text-sm-center pt-5">
+        <h1 class="display-2">Processeur d'images GIPHY</h1>
+        <p class="lead">Un processeur d'images qui cherche à prédire l'intensité du changement d'image</p>        
+        <div class="btn-group mt-4" role="group" aria-label="Boutons d'appel">
+            <a class="btn btn-primary btn-lg" href="https://giphy.com">GIPHY</a>
+          <a class="btn btn-light btn-lg" href="#speakers">Voir le GIF généré</a>
+        </div>        
+      </div>
+    </div><!-- /jumbotron -->
+
+    
+    <div class="container text-center">
+        <h1 class="display-1 mt-5">Aura GIPHY</h1>
+         <p class="lead text-center mb-5">Bienvenue sur l'Avertissement de crise de GIPHY par traitement d'image ! </p>
+    </div>
+
+    <div class="col-lg-3 mx-auto">
+        <div class="input-group">
+        <input type="text" class="form-control" id="searchtext" placeholder="Rechercher un GIF..." aria-label="Nom d'utilisateur du destinataire" aria-describedby="button-addon2">
+            <div class="input-group-btn">
+                <button class="btn btn-secondary" type="button" id="button-addon2">Rechercher</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GIF -->
+    <div class="container text-center">
+    <h1 id="speakers" class="display-4 text-center my-5 text-muted">GIF</h1>
+            <div class="row">
+            <div class="col-md-6 col-lg">
+                <div class="card mb-3">
+                    <img class="card-img-top" id="imgClickAndChange" src="{{ url_for('static',filename='GIF.JPG') }}" alt="GIF">
+                    <div class="card-body">
+                        <h4 class="card-title" id="title">Titre</h4>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /GIF -->
+      
+      
+    <!-- Graphique -->
+    <input type="hidden" name="differences" id="differences" />
+    <input type="hidden" name="frames" id="frames" />
+
+     <div class="container text-center" id="graph">
+           <a class="btn btn-outline-dark btn-lg mx-auto my-5" onclick="javascript:plot()" href="#top">Générer le graphique</a>
+    </div>
+       <!-- /Graphique -->
+   
+      <!-- Bouton d'appel
+      <div class="container ;text-center">
+        <a class="btn btn-outline-dark btn-lg mx-auto my-5" href="#top">Retourner en haut</a>
+     </div> -->
+   	  <!-- formulaire d'inscription -->
+            <hr>
+      
+      <!-- pied de page -->
+ 	<div class="row py-3">
+				<div class="col-md text-md-right">
+					<small>&copy; 2018 Processeur d'images GIPHY &amp; Presbyte</small>
+				</div>
+			</div><!-- /pied de page -->
+      
+    </div><!-- /.container -->
+  </body>
+</html>
